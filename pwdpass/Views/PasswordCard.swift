@@ -10,9 +10,10 @@ struct PasswordCard: View {
     let deleteItem: (UUID) -> Void
     
     @State private var showingDeleteAlert = false
+    @State private var showingCopyToast = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(item.note)
                     .font(AppTheme.Typography.cardTitle)
@@ -26,8 +27,6 @@ struct PasswordCard: View {
                 }
                 .buttonStyle(.plain)
             }
-            
-            Divider()
             
             HStack {
                 Text(item.isPasswordHidden ? String(repeating: "•", count: 8) : item.password)
@@ -60,6 +59,11 @@ struct PasswordCard: View {
         )
         .scaleEffect(isHovered ? 1.02 : 1.0)
         .animation(AppTheme.Animation.hover, value: isHovered)
+        .onTapGesture(count: 2) {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(item.password, forType: .string)
+            showingCopyToast = true
+        }
         .alert("确认删除", isPresented: $showingDeleteAlert) {
             Button("取消", role: .cancel) { }
             Button("删除", role: .destructive) {
@@ -68,6 +72,63 @@ struct PasswordCard: View {
         } message: {
             Text("是否确认删除该密码？此操作不可撤销。")
         }
+        .toast(isPresenting: $showingCopyToast, duration: 1.5, alignment: .center) {
+            HStack(spacing: 12) {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+                    .imageScale(.large)
+                Text("已复制密码")
+                    .foregroundStyle(.primary)
+                    .font(.system(size: 14, weight: .medium))
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.background)
+                    .shadow(
+                        color: .black.opacity(0.1),
+                        radius: 10,
+                        x: 0,
+                        y: 4
+                    )
+            )
+        }
+    }
+}
+
+// MARK: - Toast View Modifier
+extension View {
+    func toast(isPresenting: Binding<Bool>, duration: TimeInterval = 2, alignment: Alignment = .top, content: @escaping () -> some View) -> some View {
+        self.modifier(ToastModifier(isPresenting: isPresenting, duration: duration, alignment: alignment, content: content))
+    }
+}
+
+struct ToastModifier<ToastContent: View>: ViewModifier {
+    @Binding var isPresenting: Bool
+    let duration: TimeInterval
+    let alignment: Alignment
+    let content: () -> ToastContent
+    
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                ZStack {
+                    if isPresenting {
+                        self.content()
+                            .transition(.scale.combined(with: .opacity))
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        isPresenting = false
+                                    }
+                                }
+                            }
+                    }
+                }
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPresenting),
+                alignment: alignment
+            )
     }
 }
 

@@ -17,10 +17,10 @@ enum AppTheme {
     
     /// 布局尺寸配置
     enum Layout {
-        static let cardMinWidth: CGFloat = 120
-        static let cardMaxWidth: CGFloat = 150
-        static let cardSpacing: CGFloat = 12
-        static let cardCornerRadius: CGFloat = 10
+        static let cardMinWidth: CGFloat = 180
+        static let cardMaxWidth: CGFloat = 190
+        static let cardSpacing: CGFloat = 10
+        static let cardCornerRadius: CGFloat = 8
         
         static let categoryPillHeight: CGFloat = 28
         static let categorySpacing: CGFloat = 10

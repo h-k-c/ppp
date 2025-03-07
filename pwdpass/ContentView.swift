@@ -14,14 +14,80 @@ struct ContentView: View {
     @StateObject private var viewModel = PasswordViewModel()
     @State private var hoveredCardId: UUID?
     @State private var showingAddSheet = false
+    @State private var searchText = ""
+    
+    private var filteredItems: [PasswordItem] {
+        if searchText.isEmpty {
+            return viewModel.passwordItems
+        }
+        return viewModel.passwordItems.filter { $0.note.localizedCaseInsensitiveContains(searchText) }
+    }
     
     var body: some View {
         VStack(spacing: 0) {
-            passwordGridSection
-        }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                addPasswordButton
+            // 顶部工具栏
+            HStack {
+                Text("密码管理器")
+                    .font(.system(size: 14, weight: .semibold))
+                Spacer()
+                Button(action: {
+                    showingAddSheet = true
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(AppTheme.Colors.accent)
+                        .imageScale(.medium)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.bottom, 10)
+            
+            // 搜索框
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+                    .imageScale(.small)
+                TextField("搜索密码", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 13))
+                if !searchText.isEmpty {
+                    Button(action: { searchText = "" }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                            .imageScale(.small)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(6)
+            .background(
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(.secondary.opacity(0.1))
+            )
+            .padding(.bottom, 12)
+            
+            if filteredItems.isEmpty {
+                VStack(spacing: 10) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 28))
+                        .foregroundStyle(.secondary)
+                    Text("未找到相关密码")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                // 密码列表
+                ScrollView {
+                    LazyVGrid(columns: [
+                        GridItem(.flexible(), spacing: AppTheme.Layout.cardSpacing),
+                        GridItem(.flexible(), spacing: AppTheme.Layout.cardSpacing)
+                    ], spacing: AppTheme.Layout.cardSpacing) {
+                        ForEach(filteredItems) { item in
+                            passwordCard(for: item)
+                        }
+                    }
+                    .padding(.top, 2)
+                }
             }
         }
         .sheet(isPresented: $showingAddSheet) {
@@ -29,27 +95,6 @@ struct ContentView: View {
                 viewModel.addPassword(newItem)
             }
         }
-    }
-    
-    /// 密码网格区域
-    private var passwordGridSection: some View {
-        ScrollView {
-            LazyVGrid(columns: [
-                GridItem(.adaptive(minimum: AppTheme.Layout.cardMinWidth, maximum: AppTheme.Layout.cardMaxWidth), spacing: AppTheme.Layout.cardSpacing)
-            ], spacing: AppTheme.Layout.cardSpacing) {
-                ForEach(viewModel.passwordItems) { item in
-                    passwordCard(for: item)
-                }
-            }
-            .padding()
-        }
-        .background(
-            ZStack {
-                AppTheme.Colors.background
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-            }
-        )
     }
     
     /// 创建密码卡片视图
@@ -86,17 +131,6 @@ struct ContentView: View {
             }
         }
         .transition(.scale.combined(with: .opacity))
-    }
-    
-    /// 添加密码按钮
-    private var addPasswordButton: some View {
-        Button(action: {
-            showingAddSheet = true
-        }) {
-            Image(systemName: "plus.circle.fill")
-                .foregroundStyle(AppTheme.Colors.accent)
-                .imageScale(.large)
-        }
     }
 }
 
