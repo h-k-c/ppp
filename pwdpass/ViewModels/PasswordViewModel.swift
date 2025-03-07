@@ -3,24 +3,19 @@ import SwiftUI
 
 class PasswordViewModel: ObservableObject {
     @Published var passwordItems: [PasswordItem] = []
-    @Published var selectedCategory: String = PasswordCategory.social.rawValue
     
     init() {
         // 添加一些示例数据
         passwordItems = [
-            PasswordItem(category: PasswordCategory.social.rawValue, note: "微信账号", password: "example123"),
-            PasswordItem(category: PasswordCategory.social.rawValue, note: "QQ账号", password: "qq123456"),
-            PasswordItem(category: PasswordCategory.shopping.rawValue, note: "淘宝账号", password: "shop456"),
-            PasswordItem(category: PasswordCategory.shopping.rawValue, note: "京东账号", password: "jd789"),
-            PasswordItem(category: PasswordCategory.work.rawValue, note: "公司邮箱", password: "work789"),
-            PasswordItem(category: PasswordCategory.work.rawValue, note: "工作平台", password: "platform123"),
-            PasswordItem(category: PasswordCategory.finance.rawValue, note: "支付宝", password: "alipay123"),
-            PasswordItem(category: PasswordCategory.finance.rawValue, note: "网银", password: "bank456")
+            PasswordItem(note: "微信账号", password: "example123"),
+            PasswordItem(note: "QQ账号", password: "qq123456"),
+            PasswordItem(note: "淘宝账号", password: "shop456"),
+            PasswordItem(note: "京东账号", password: "jd789"),
+            PasswordItem(note: "公司邮箱", password: "work789"),
+            PasswordItem(note: "工作平台", password: "platform123"),
+            PasswordItem(note: "支付宝", password: "alipay123"),
+            PasswordItem(note: "网银", password: "bank456")
         ]
-    }
-    
-    func getPasswordsByCategory(_ category: String) -> [PasswordItem] {
-        return passwordItems.filter { $0.category == category }
     }
     
     func addPassword(_ item: PasswordItem) {

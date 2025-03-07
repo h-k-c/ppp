@@ -7,14 +7,9 @@ struct PasswordCard: View {
     let item: PasswordItem
     let isHovered: Bool
     let toggleVisibility: (UUID) -> Void
+    let deleteItem: (UUID) -> Void
     
-    private var gradient: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(colors: item.gradientColors),
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-    }
+    @State private var showingDeleteAlert = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -23,12 +18,16 @@ struct PasswordCard: View {
                     .font(AppTheme.Typography.cardTitle)
                     .foregroundColor(.primary)
                 Spacer()
-                Image(systemName: "lock.fill")
-                    .foregroundStyle(item.gradientColors[0].opacity(0.8))
+                Button(action: {
+                    showingDeleteAlert = true
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                }
+                .buttonStyle(.plain)
             }
             
             Divider()
-                .background(item.gradientColors[0].opacity(0.5))
             
             HStack {
                 Text(item.isPasswordHidden ? String(repeating: "•", count: 8) : item.password)
@@ -43,7 +42,7 @@ struct PasswordCard: View {
                     }
                 }) {
                     Image(systemName: item.isPasswordHidden ? "eye" : "eye.slash")
-                        .foregroundColor(item.gradientColors[0].opacity(0.8))
+                        .foregroundStyle(.gray)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -51,20 +50,24 @@ struct PasswordCard: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: AppTheme.Layout.cardCornerRadius)
-                .fill(gradient)
-                .overlay(
-                    RoundedRectangle(cornerRadius: AppTheme.Layout.cardCornerRadius)
-                        .strokeBorder(item.gradientColors[0].opacity(0.3))
-                )
+                .fill(.background)
                 .shadow(
-                    color: item.gradientColors[0].opacity(isHovered ? 0.3 : 0.2),
-                    radius: isHovered ? 8 : 4,
+                    color: .black.opacity(isHovered ? 0.15 : 0.1),
+                    radius: isHovered ? 12 : 8,
                     x: 0,
-                    y: isHovered ? 4 : 2
+                    y: isHovered ? 6 : 4
                 )
         )
         .scaleEffect(isHovered ? 1.02 : 1.0)
         .animation(AppTheme.Animation.hover, value: isHovered)
+        .alert("确认删除", isPresented: $showingDeleteAlert) {
+            Button("取消", role: .cancel) { }
+            Button("删除", role: .destructive) {
+                deleteItem(item.id)
+            }
+        } message: {
+            Text("是否确认删除该密码？此操作不可撤销。")
+        }
     }
 }
 
@@ -74,21 +77,23 @@ struct PasswordCard_Previews: PreviewProvider {
         VStack(spacing: 20) {
             PasswordCard(
                 item: PasswordItem(
-                    category: PasswordCategory.social.rawValue,
                     note: "微信账号",
                     password: "example123"
                 ),
-                isHovered: false
-            ) { _ in }
+                isHovered: false,
+                toggleVisibility: { _ in },
+                deleteItem: { _ in }
+            )
             
             PasswordCard(
                 item: PasswordItem(
-                    category: PasswordCategory.shopping.rawValue,
                     note: "淘宝账号",
                     password: "shop456"
                 ),
-                isHovered: true
-            ) { _ in }
+                isHovered: true,
+                toggleVisibility: { _ in },
+                deleteItem: { _ in }
+            )
         }
         .padding()
         .frame(width: 300)

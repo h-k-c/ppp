@@ -13,10 +13,10 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel = PasswordViewModel()
     @State private var hoveredCardId: UUID?
+    @State private var showingAddSheet = false
     
     var body: some View {
         VStack(spacing: 0) {
-            categorySection
             passwordGridSection
         }
         .toolbar {
@@ -24,29 +24,11 @@ struct ContentView: View {
                 addPasswordButton
             }
         }
-    }
-    
-    // MARK: - View Components
-    
-    /// 分类选择区域
-    private var categorySection: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: AppTheme.Layout.categorySpacing) {
-                ForEach(PasswordCategory.allCases, id: \.self) { category in
-                    CategoryPill(
-                        title: category.rawValue,
-                        isSelected: viewModel.selectedCategory == category.rawValue
-                    ) {
-                        withAnimation(AppTheme.Animation.defaultSpring) {
-                            viewModel.selectedCategory = category.rawValue
-                        }
-                    }
-                }
+        .sheet(isPresented: $showingAddSheet) {
+            AddPasswordSheet { newItem in
+                viewModel.addPassword(newItem)
             }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
         }
-        .background(.ultraThinMaterial)
     }
     
     /// 密码网格区域
@@ -55,12 +37,11 @@ struct ContentView: View {
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: AppTheme.Layout.cardMinWidth, maximum: AppTheme.Layout.cardMaxWidth), spacing: AppTheme.Layout.cardSpacing)
             ], spacing: AppTheme.Layout.cardSpacing) {
-                ForEach(viewModel.getPasswordsByCategory(viewModel.selectedCategory)) { item in
+                ForEach(viewModel.passwordItems) { item in
                     passwordCard(for: item)
                 }
             }
             .padding()
-            .animation(AppTheme.Animation.defaultSpring, value: viewModel.selectedCategory)
         }
         .background(
             ZStack {
@@ -75,10 +56,14 @@ struct ContentView: View {
     private func passwordCard(for item: PasswordItem) -> some View {
         PasswordCard(
             item: item,
-            isHovered: hoveredCardId == item.id
-        ) { id in
-            viewModel.togglePasswordVisibility(for: id)
-        }
+            isHovered: hoveredCardId == item.id,
+            toggleVisibility: { id in
+                viewModel.togglePasswordVisibility(for: id)
+            },
+            deleteItem: { id in
+                viewModel.deletePassword(for: id)
+            }
+        )
         .onHover { isHovered in
             withAnimation(AppTheme.Animation.hover) {
                 hoveredCardId = isHovered ? item.id : nil
@@ -99,13 +84,6 @@ struct ContentView: View {
                 Text("编辑")
                 Image(systemName: "pencil")
             }
-            
-            Button(action: {
-                viewModel.deletePassword(for: item.id)
-            }) {
-                Text("删除")
-                Image(systemName: "trash")
-            }
         }
         .transition(.scale.combined(with: .opacity))
     }
@@ -113,7 +91,7 @@ struct ContentView: View {
     /// 添加密码按钮
     private var addPasswordButton: some View {
         Button(action: {
-            // TODO: 实现添加新密码功能
+            showingAddSheet = true
         }) {
             Image(systemName: "plus.circle.fill")
                 .foregroundStyle(AppTheme.Colors.accent)

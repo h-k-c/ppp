@@ -3,17 +3,13 @@ import SwiftUI
 
 struct PasswordItem: Identifiable, Hashable {
     let id = UUID()
-    var category: String
     var note: String
     var password: String
     var isPasswordHidden: Bool = true
-    let gradientColors: [Color]
     
-    init(category: String, note: String, password: String) {
-        self.category = category
+    init(note: String, password: String) {
         self.note = note
         self.password = password
-        self.gradientColors = AppTheme.Colors.randomCardGradient()
     }
     
     func hash(into hasher: inout Hasher) {
