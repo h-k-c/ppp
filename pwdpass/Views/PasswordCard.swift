@@ -29,7 +29,7 @@ struct PasswordCard: View {
             }
             
             HStack {
-                Text(item.isPasswordHidden ? String(repeating: "•", count: 8) : item.password)
+                Text(!item.isPasswordVisible ? String(repeating: "•", count: 8) : item.password)
                     .font(AppTheme.Typography.cardContent)
                     .foregroundColor(.primary)
                 
@@ -40,10 +40,10 @@ struct PasswordCard: View {
                         toggleVisibility(item.id)
                     }
                 }) {
-                    Image(systemName: item.isPasswordHidden ? "eye" : "eye.slash")
-                        .foregroundStyle(.gray)
+                    Image(systemName: item.isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                        .foregroundStyle(.secondary)
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
             }
         }
         .padding(12)

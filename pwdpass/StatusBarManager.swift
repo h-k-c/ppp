@@ -46,13 +46,24 @@ class StatusBarManager {
         
         // 设置状态栏图标
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "key.fill", accessibilityDescription: "密码管理器")
+            // 设置自定义图标
+            if let image = NSImage(named: "StatusBarIcon") {
+                image.size = NSSize(width: 16, height: 16)  // 调整为标准状态栏图标大小
+                image.isTemplate = true  // 确保图标能够适应深色/浅色模式
+                button.image = image
+            } else {
+                // 如果找不到自定义图标，使用系统图标作为后备
+                button.image = NSImage(systemSymbolName: "key.fill", accessibilityDescription: "密码管理器")
+            }
+            
             button.imagePosition = .imageLeft
             
             // 设置鼠标事件处理
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
             button.action = #selector(handleClick)
             button.target = self
+            
+            button.toolTip = "嗅密"
         }
         
         // 添加监听器，点击外部时关闭弹窗

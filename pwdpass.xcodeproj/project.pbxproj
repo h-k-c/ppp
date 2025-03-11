@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXFileReference section */
@@ -264,7 +264,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.note.hkc.pwdpass;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "嗅密";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -291,7 +291,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.note.hkc.pwdpass;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "嗅密";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -319,6 +319,16 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+		rootObject = {
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app.pwdpass";
+				PRODUCT_NAME = "嗅密";
+				MARKETING_VERSION = "1.0";
+				CURRENT_PROJECT_VERSION = 1;
+			};
+		};
 	};
 	rootObject = 05DADA4D2D7ADC72001EC8B1 /* Project object */;
 }
