@@ -4,28 +4,50 @@ class StorageManager {
     static let shared = StorageManager()
     private let fileManager = FileManager.default
     
-    private var storageURL: URL? {
-        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-            return nil
+    private var storageDirectoryURL: URL? {
+        // 获取应用程序的当前工作目录
+        let currentDirectoryURL = URL(fileURLWithPath: fileManager.currentDirectoryPath)
+        let pwdfileDirectory = currentDirectoryURL.appendingPathComponent("pwdfile")
+        
+        if !fileManager.fileExists(atPath: pwdfileDirectory.path) {
+            try? fileManager.createDirectory(at: pwdfileDirectory, withIntermediateDirectories: true)
         }
         
-        let bundleID = Bundle.main.bundleIdentifier ?? "com.app.pwdpass"
-        let appFolder = appSupport.appendingPathComponent(bundleID)
-        
-        // 创建应用文件夹
-        if !fileManager.fileExists(atPath: appFolder.path) {
-            try? fileManager.createDirectory(at: appFolder, withIntermediateDirectories: true)
-        }
-        
-        return appFolder.appendingPathComponent("passwords.data")
+        return pwdfileDirectory
     }
     
-    // 保存密码数据
-    func savePasswords(_ items: [PasswordItem]) {
-        guard let url = storageURL else { return }
+    private var passwordsFileURL: URL? {
+        storageDirectoryURL?.appendingPathComponent("passwords.data")
+    }
+    
+    private init() {
+        setupStorageDirectory()
+    }
+    
+    private func setupStorageDirectory() {
+        guard let directoryURL = storageDirectoryURL else {
+            print("无法创建存储目录")
+            return
+        }
+        
+        if !fileManager.fileExists(atPath: directoryURL.path) {
+            do {
+                try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+                print("成功创建存储目录")
+            } catch {
+                print("创建存储目录失败: \(error)")
+            }
+        }
+    }
+    
+    func savePasswords(_ passwords: [PasswordItem]) {
+        guard let fileURL = passwordsFileURL else {
+            print("无法获取密码文件 URL")
+            return
+        }
         
         do {
-            let encodedItems = try items.map { item -> StoredPasswordItem in
+            let encodedItems = try passwords.map { item -> StoredPasswordItem in
                 let encryptedPassword = try CryptoManager.encrypt(item.password)
                 return StoredPasswordItem(
                     id: item.id,
@@ -36,33 +58,55 @@ class StorageManager {
             }
             
             let data = try JSONEncoder().encode(encodedItems)
-            try data.write(to: url)
+            try data.write(to: fileURL)
+            print("密码已保存到本地: \(fileURL.path)")
         } catch {
             print("保存密码失败: \(error)")
         }
     }
     
-    // 读取密码数据
     func loadPasswords() -> [PasswordItem] {
-        guard let url = storageURL,
-              let data = try? Data(contentsOf: url) else {
+        guard let fileURL = passwordsFileURL else {
+            print("无法获取密码文件 URL")
             return []
         }
         
         do {
+            if !fileManager.fileExists(atPath: fileURL.path) {
+                print("密码文件不存在，返回空列表")
+                return []
+            }
+            
+            let data = try Data(contentsOf: fileURL)
             let storedItems = try JSONDecoder().decode([StoredPasswordItem].self, from: data)
+            
             return try storedItems.map { stored -> PasswordItem in
                 let decryptedPassword = try CryptoManager.decrypt(stored.encryptedPassword)
                 return PasswordItem(
                     id: stored.id,
                     category: stored.category,
                     note: stored.note,
-                    password: decryptedPassword
+                    password: decryptedPassword,
+                    isPasswordVisible: false
                 )
             }
         } catch {
-            print("读取密码失败: \(error)")
+            print("加载密码失败: \(error)")
             return []
+        }
+    }
+    
+    func deletePasswords() {
+        guard let fileURL = passwordsFileURL else {
+            print("无法获取密码文件 URL")
+            return
+        }
+        
+        do {
+            try fileManager.removeItem(at: fileURL)
+            print("密码文件已删除")
+        } catch {
+            print("删除密码文件失败: \(error)")
         }
     }
 }

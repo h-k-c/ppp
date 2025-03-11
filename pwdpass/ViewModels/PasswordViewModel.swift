@@ -6,7 +6,10 @@ class PasswordViewModel: ObservableObject {
     private let storage = StorageManager.shared
     
     init() {
-        // 从存储加载数据
+        loadPasswords()
+    }
+    
+    private func loadPasswords() {
         passwordItems = storage.loadPasswords()
     }
     

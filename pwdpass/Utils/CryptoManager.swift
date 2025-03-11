@@ -3,10 +3,11 @@ import CryptoKit
 import Security
 
 class CryptoManager {
-    private static let keyTag = "com.app.pwdpass.encryption.key"
-    private static var cachedKey: SymmetricKey?
+    static let shared = CryptoManager()
+    private static let keyTag = "com.note.hkc.pwdpass.encryption.key"
+    private var cachedKey: SymmetricKey?
     
-    private static var key: SymmetricKey {
+    private var key: SymmetricKey {
         if let cachedKey = cachedKey {
             return cachedKey
         }
@@ -22,11 +23,25 @@ class CryptoManager {
         return newKey
     }
     
+    // 加密字符串
     static func encrypt(_ string: String) throws -> Data {
         guard let data = string.data(using: .utf8) else {
             throw CryptoError.encodingFailed
         }
-        
+        return try shared.encrypt(data)
+    }
+    
+    // 解密为字符串
+    static func decrypt(_ data: Data) throws -> String {
+        let decryptedData = try shared.decrypt(data)
+        guard let string = String(data: decryptedData, encoding: .utf8) else {
+            throw CryptoError.decodingFailed
+        }
+        return string
+    }
+    
+    // 加密数据
+    func encrypt(_ data: Data) throws -> Data {
         let sealedBox = try AES.GCM.seal(data, using: key)
         guard let combined = sealedBox.combined else {
             throw CryptoError.encryptionFailed
@@ -34,16 +49,11 @@ class CryptoManager {
         return combined
     }
     
-    static func decrypt(_ data: Data) throws -> String {
+    // 解密数据
+    func decrypt(_ data: Data) throws -> Data {
         do {
             let sealedBox = try AES.GCM.SealedBox(combined: data)
-            let decryptedData = try AES.GCM.open(sealedBox, using: key)
-            
-            guard let string = String(data: decryptedData, encoding: .utf8) else {
-                throw CryptoError.decodingFailed
-            }
-            
-            return string
+            return try AES.GCM.open(sealedBox, using: key)
         } catch {
             print("解密失败: \(error)")
             throw CryptoError.decryptionFailed
@@ -52,10 +62,10 @@ class CryptoManager {
     
     // MARK: - Private Methods
     
-    private static func saveKey(_ key: SymmetricKey) throws {
+    private func saveKey(_ key: SymmetricKey) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: keyTag,
+            kSecAttrAccount as String: Self.keyTag,
             kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
             kSecValueData as String: key.withUnsafeBytes { Data($0) }
         ]
@@ -63,7 +73,7 @@ class CryptoManager {
         // 先尝试删除已存在的密钥
         SecItemDelete([
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: keyTag
+            kSecAttrAccount as String: Self.keyTag
         ] as CFDictionary)
         
         // 保存新密钥
@@ -74,10 +84,10 @@ class CryptoManager {
         }
     }
     
-    private static func loadKey() throws -> SymmetricKey? {
+    private func loadKey() throws -> SymmetricKey? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: keyTag,
+            kSecAttrAccount as String: Self.keyTag,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
