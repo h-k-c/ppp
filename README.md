@@ -85,6 +85,17 @@ open pwdpass.xcodeproj
 4. 点击密码卡片上的复制按钮一键复制密码
 5. 右键点击卡片可进行编辑或删除操作
 
+## ⚠️ 首次打开提示"移到废纸篓"怎么办
+
+由于本应用尚未经过 Apple 公证签名，macOS 首次打开时会弹出提示，说明无法验证开发者并建议移到废纸篓。**不要点"移到废纸篓"**，按以下步骤操作：
+
+1. 点击弹窗中的**取消**关闭提示
+2. 打开 **系统设置 → 隐私与安全性**
+3. 向下滚动，找到"仍要打开"按钮并点击
+4. 在随后弹出的确认框中点击**仍要打开**
+
+之后正常启动即可，不需要每次都这样操作。
+
 ## 隐私说明
 
 PwdPass 将所有密码安全地存储在本地，不发起任何网络请求，不收集任何用户数据。
@@ -142,6 +153,17 @@ Once launched, the PwdPass icon appears in the macOS menu bar. Click it to open 
 3. Use the search box to filter entries in real time
 4. Click the copy button on any card to copy the password
 5. Right-click a card to edit or delete it
+
+### ⚠️ macOS says "Move to Trash" on first launch
+
+Because this app is not notarized by Apple, macOS will show a warning on first open saying it cannot verify the developer. **Do not click "Move to Trash"** — follow these steps instead:
+
+1. Click **Cancel** to dismiss the dialog
+2. Open **System Settings → Privacy & Security**
+3. Scroll down and click **Open Anyway**
+4. Click **Open Anyway** again in the confirmation dialog
+
+You only need to do this once.
 
 ### Privacy
 
