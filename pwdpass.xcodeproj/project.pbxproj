@@ -3,16 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0E39398258A07764022B3F5F /* InterVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D39ED74196E9D5D902E09CE /* InterVariable.ttf */; };
+		149037120B606692E43DB2AA /* JetBrainsMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13EFF67D95ED53E2EBCEC474 /* JetBrainsMono-Regular.ttf */; };
+		467FE199A5579200D11A6525 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 269C7EEF095D9300976D8DF6 /* Inter-SemiBold.ttf */; };
+		52D28CAC797DAFBAAA4F4F9B /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9820FCFD54C416FE9C1A423C /* Inter-Regular.ttf */; };
+		ABDAB5203BDF55CAF9F908EB /* JetBrainsMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 438105809506219E2E1FA64B /* JetBrainsMono-Bold.ttf */; };
+		FA2C00EDF0BF416D43387AD3 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F520CD6FB6BD9FB65D95DC73 /* Inter-Bold.ttf */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		05DADA552D7ADC72001EC8B1 /* pwdpass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pwdpass.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05DADA552D7ADC72001EC8B1 /* pwdpass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = pwdpass.app; path = "嗅密.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13EFF67D95ED53E2EBCEC474 /* JetBrainsMono-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "JetBrainsMono-Regular.ttf"; sourceTree = "<group>"; };
+		269C7EEF095D9300976D8DF6 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		438105809506219E2E1FA64B /* JetBrainsMono-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "JetBrainsMono-Bold.ttf"; sourceTree = "<group>"; };
+		8D39ED74196E9D5D902E09CE /* InterVariable.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = InterVariable.ttf; sourceTree = "<group>"; };
+		9820FCFD54C416FE9C1A423C /* Inter-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		F520CD6FB6BD9FB65D95DC73 /* Inter-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		05DADA572D7ADC72001EC8B1 /* pwdpass */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = pwdpass;
 			sourceTree = "<group>";
 		};
@@ -34,6 +51,7 @@
 			children = (
 				05DADA572D7ADC72001EC8B1 /* pwdpass */,
 				05DADA562D7ADC72001EC8B1 /* Products */,
+				DCA2C702CBBE20A6EFB585A1 /* Fonts */,
 			);
 			sourceTree = "<group>";
 		};
@@ -44,6 +62,20 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		DCA2C702CBBE20A6EFB585A1 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F520CD6FB6BD9FB65D95DC73 /* Inter-Bold.ttf */,
+				9820FCFD54C416FE9C1A423C /* Inter-Regular.ttf */,
+				269C7EEF095D9300976D8DF6 /* Inter-SemiBold.ttf */,
+				8D39ED74196E9D5D902E09CE /* InterVariable.ttf */,
+				438105809506219E2E1FA64B /* JetBrainsMono-Bold.ttf */,
+				13EFF67D95ED53E2EBCEC474 /* JetBrainsMono-Regular.ttf */,
+			);
+			name = Fonts;
+			path = pwdpass/Fonts;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -64,8 +96,6 @@
 				05DADA572D7ADC72001EC8B1 /* pwdpass */,
 			);
 			name = pwdpass;
-			packageProductDependencies = (
-			);
 			productName = pwdpass;
 			productReference = 05DADA552D7ADC72001EC8B1 /* pwdpass.app */;
 			productType = "com.apple.product-type.application";
@@ -109,6 +139,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA2C00EDF0BF416D43387AD3 /* Inter-Bold.ttf in Resources */,
+				52D28CAC797DAFBAAA4F4F9B /* Inter-Regular.ttf in Resources */,
+				467FE199A5579200D11A6525 /* Inter-SemiBold.ttf in Resources */,
+				0E39398258A07764022B3F5F /* InterVariable.ttf in Resources */,
+				ABDAB5203BDF55CAF9F908EB /* JetBrainsMono-Bold.ttf in Resources */,
+				149037120B606692E43DB2AA /* JetBrainsMono-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,11 +285,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = pwdpass/pwdpass.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"pwdpass/Preview Content\"";
-				DEVELOPMENT_TEAM = WS3LKRA692;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -276,11 +313,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = pwdpass/pwdpass.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"pwdpass/Preview Content\"";
-				DEVELOPMENT_TEAM = WS3LKRA692;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -319,16 +357,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-		rootObject = {
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.app.pwdpass";
-				PRODUCT_NAME = "嗅密";
-				MARKETING_VERSION = "1.0";
-				CURRENT_PROJECT_VERSION = 1;
-			};
-		};
 	};
 	rootObject = 05DADA4D2D7ADC72001EC8B1 /* Project object */;
 }

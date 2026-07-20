@@ -8,9 +8,13 @@
     <string>嗅密</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2025 胡开成. All rights reserved.</string>
     <key>LSMinimumSystemVersion</key>
     <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
     <key>LSUIElement</key>
     <true/>
+    <key>ATSApplicationFontsPath</key>
+    <string>Fonts</string>
 </dict>
-</plist> 
+</plist>
